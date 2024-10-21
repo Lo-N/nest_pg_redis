@@ -1,18 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { RegistrationDto } from 'src/dto/registration.dto';
+import { ResetPasswordDto } from 'src/dto/resetPassword.dto';
 
 @Injectable()
 export class AuthService {
   constructor() {}
 
-  async signIn() {
+  async signIn(incomingLogin: string, pass: string) {
     return 'signIn'
   }
 
-  async signUp() {
+  async signUp(userData: RegistrationDto) {
     return 'signUp'
   }
 
-  async resetPassword() {
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
     return 'resetPassword'
   }
 }
