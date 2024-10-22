@@ -1,4 +1,5 @@
-import { IsInt, IsNotEmpty, IsNumber, IsPositive, IsString, Max } from 'class-validator';
+import { IsEmail, IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
+
 
 export class RegistrationDto {
   @IsString()
@@ -7,15 +8,22 @@ export class RegistrationDto {
 
   @IsString()
   @IsNotEmpty()
-  password: string;
+  firstName: string;
 
   @IsString()
   @IsNotEmpty()
-  name: string;
+  lastName: string;
 
-  @IsNumber()
-  @IsPositive()
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+
   @IsInt()
+  @Min(20)
   @Max(100)
   age: number;
 }

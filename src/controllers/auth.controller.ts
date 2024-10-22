@@ -16,7 +16,6 @@ export class AuthController {
     return this.authService.signIn(signInDto.login, signInDto.password);
   }
 
-  // Addition
   @Public()
   @HttpCode(HttpStatus.CREATED)
   @Post('sign_up')
