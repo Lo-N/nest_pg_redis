@@ -8,6 +8,9 @@ import { AuthModule } from './auth.module';
 import { ItemModule } from './item.module';
 import { PurchaseModule } from './purchase.module';
 import { UserModule } from './user.module';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Module({
   imports: [
@@ -17,8 +20,19 @@ import { UserModule } from './user.module';
     UserModule,
     ConfigModule.forRoot({ isGlobal: true }),
     SequelizeModule.forRoot(DataBaseConfig),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: process.env.JWT_TTL },
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
