@@ -68,7 +68,8 @@ export class UserService {
 
   async updateUser(user: User, data: UpdateUserDto): Promise<User> {
     try {
-      Object.assign(user, data);
+      Object.assign(user, data.password ? { ...data, password: await hash(data.password, 10) } : data);
+
       return user.save();
     } catch (error) {
       console.warn(`An error occur at ${this.updateUser.name}`, error);
