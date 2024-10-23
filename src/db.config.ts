@@ -1,4 +1,6 @@
 import { SequelizeModuleOptions } from "@nestjs/sequelize";
+import { Item } from "src/models/item.model";
+import { Purchase } from "src/models/purchase.model";
 import { User } from "src/models/user.model";
 
 export const DataBaseConfig: SequelizeModuleOptions = {
@@ -8,5 +10,6 @@ export const DataBaseConfig: SequelizeModuleOptions = {
   username: process.env.DB_USERNAME!,
   password: process.env.DB_PASSWORD!,
   database: process.env.DB_DATABASE!,
-  models: [User],
+  models: [User, Item, Purchase],
+  autoLoadModels: true,
 }

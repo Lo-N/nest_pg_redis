@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { hash } from 'bcrypt';
+import { Transaction } from 'sequelize';
 import { RegistrationDto } from 'src/dto/registration.dto';
 import { UpdateUserDto } from 'src/dto/updateUser.dto';
 import { User } from 'src/models/user.model';
@@ -66,11 +67,15 @@ export class UserService {
     }
   }
 
-  async updateUser(user: User, data: UpdateUserDto): Promise<User> {
+  async updateUser(user: User, data: UpdateUserDto, transaction?: Transaction): Promise<User> {
     try {
       Object.assign(user, data.password ? { ...data, password: await hash(data.password, 10) } : data);
 
-      return user.save();
+      if (transaction) {
+        return user.save({transaction});
+      } else {
+        return user.save();
+      }
     } catch (error) {
       console.warn(`An error occur at ${this.updateUser.name}`, error);
       throw new BadRequestException(UserErrorMessages.USER_UNABLE_TO_UPDATE(user.id));

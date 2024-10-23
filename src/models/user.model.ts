@@ -1,5 +1,6 @@
-import { Column, Model, NotEmpty, Table, Unique, CreatedAt, UpdatedAt, DeletedAt, PrimaryKey, Default, DataType } from 'sequelize-typescript';
+import { Column, Model, NotEmpty, Table, Unique, CreatedAt, UpdatedAt, DeletedAt, PrimaryKey, Default, DataType, HasMany } from 'sequelize-typescript';
 import { UUID } from 'crypto';
+import { Purchase } from './purchase.model';
 
 @Table
 export class User extends Model {
@@ -42,4 +43,11 @@ export class User extends Model {
 
   @DeletedAt
   deletedAt?: Date;
+
+  @Default(0)
+  @Column
+  balance: number;
+
+  @HasMany(() => Purchase)
+  purchases: Purchase[];
 }

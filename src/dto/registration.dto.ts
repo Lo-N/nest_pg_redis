@@ -1,4 +1,4 @@
-import { IsEmail, IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
+import { IsEmail, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
 
 
 export class RegistrationDto {
@@ -26,4 +26,8 @@ export class RegistrationDto {
   @Min(20)
   @Max(100)
   age: number;
+
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @IsOptional()
+  balance?: number;
 }
