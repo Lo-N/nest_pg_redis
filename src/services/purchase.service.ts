@@ -46,7 +46,7 @@ export class PurchaseService {
   async makePurchase(
     userInfo: IAccessTokenData,
     requestBody: MakePurchaseDto,
-  ): Promise<number> {
+  ): Promise<{balance: number}> {
     const user = await this.userService.getUserById(userInfo.id);
 
     if (user.balance === 0) {
@@ -97,7 +97,7 @@ export class PurchaseService {
         await this.userService.updateUser(user, { balance: newUserBalance }, t);
       });
 
-      return newUserBalance;
+      return { balance: newUserBalance };
     } catch (error) {
       console.warn(`An error occur at ${this.makePurchase.name}`, error);
       throw error;

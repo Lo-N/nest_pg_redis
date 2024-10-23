@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { UUID } from 'crypto';
 import {
   BelongsTo,
@@ -19,8 +18,8 @@ import { User } from './user.model';
 @Table
 export class Purchase extends Model {
   @PrimaryKey
-  @Default(uuidv4())
-  @Column
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
   id: UUID;
 
   @NotEmpty
