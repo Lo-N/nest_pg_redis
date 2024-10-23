@@ -19,7 +19,7 @@ const users = [
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-     await queryInterface.bulkInsert('Users', users);
+     await queryInterface.bulkInsert('Users', users, { ignoreDuplicates: true });
    
   },
 

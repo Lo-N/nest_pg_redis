@@ -21,7 +21,7 @@ const items = [
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-     await queryInterface.bulkInsert('Items', items);
+     await queryInterface.bulkInsert('Items', items, { ignoreDuplicates: true });
   },
 
   async down (queryInterface, Sequelize) {
