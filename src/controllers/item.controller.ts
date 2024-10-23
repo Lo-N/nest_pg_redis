@@ -9,6 +9,6 @@ export class ItemController {
   @Public()
   @Get()
   getAllItems() {
-    return this.itemService.getAllItems();
+    return this.itemService.getExternalItems();
   }
 }

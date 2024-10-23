@@ -1,4 +1,4 @@
-import { Injectable, MethodNotAllowedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { MakePurchaseDto } from 'src/dto/makePurchase.dto';
 import { IAccessTokenData } from 'src/interfaces/accessTokenData.interface';
 import { Item } from 'src/models/item.model';
@@ -37,7 +37,7 @@ export class PurchaseService {
     const user = await this.userService.getUserById(userInfo.id);
 
     if (user.balance === 0) {
-      throw new MethodNotAllowedException(UserErrorMessages.USER_NOT_ENOUGH_BALANCE());
+      throw new BadRequestException(UserErrorMessages.USER_NOT_ENOUGH_BALANCE());
     }
 
     const itemsMap = new Map<string, number>();
@@ -49,21 +49,25 @@ export class PurchaseService {
 
     const items = await this.itemsService.getItemsByIds(itemsIds);
 
+    if (items.length === 0) {
+      throw new NotFoundException(UserErrorMessages.ITEMS_NOT_FOUND)
+    }
+
     const calculateAmount = this.calculatePurchaseAmount(itemsMap, items);
 
     if (calculateAmount > user.balance) {
-      throw new MethodNotAllowedException(UserErrorMessages.USER_NOT_ENOUGH_BALANCE());
+      throw new BadRequestException(UserErrorMessages.USER_NOT_ENOUGH_BALANCE());
     }
 
     const newUserBalance = this.calculateUserBalance(user.balance, calculateAmount);
 
     try {
       await this.sequelize.transaction(async t => {
-        const purchase = await this.purchaseRepository.create(
+        await this.purchaseRepository.create(
           {
             amount: calculateAmount,
             userId: userInfo.id,
-            itemsIds
+            itemsIds,
           },
           {
             transaction: t,
@@ -75,7 +79,6 @@ export class PurchaseService {
 
       return newUserBalance
     } catch (error) {
-
       console.warn(`An error occur at ${this.makePurchase.name}`, error);
       throw error
     }

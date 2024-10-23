@@ -16,4 +16,8 @@ export const UserErrorMessages = {
   SOMETHING_WENT_WRONG: () => 'Something went wrong',
 
   INTERNAL_SERVER_ERROR: () => 'Internal server error',
+
+  ITEMS_NOT_FOUND: () => 'Items not found',
+
+  UPSTREAM_SERVER_ERROR: () => 'Upstream server error',
 };
