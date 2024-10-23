@@ -5,11 +5,12 @@ const users = [
   {
     id: '4d03c043-2301-4f35-9229-f217e31cc637',
     login: 'joe_joe',
-    password: 'not_joe_secret',
+    password: '$2b$10$OgoDdxG776MBzCB8pUNbUOahx/EsDFQxll8Eaw96u7Kz3zA97h5kS', // not_joe_secret
     firstName: 'John',
     lastName: ' Doe',
     email: 'johndoe@user.io',
-    age: 20,
+    age: 30,
+    balance: 125.75,
     createdAt: new Date(),
     updatedAt: new Date(),
   }

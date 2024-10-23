@@ -10,4 +10,4 @@ COPY ["src", "db", ".env", "./"]
 
 EXPOSE 3000
 
-CMD [  "yarn", "migrate_and_run" ]
+CMD [  "yarn", "migrate:seed:run" ]

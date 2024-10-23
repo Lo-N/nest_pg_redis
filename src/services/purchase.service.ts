@@ -50,7 +50,7 @@ export class PurchaseService {
     const items = await this.itemsService.getItemsByIds(itemsIds);
 
     if (items.length === 0) {
-      throw new NotFoundException(UserErrorMessages.ITEMS_NOT_FOUND)
+      throw new NotFoundException(UserErrorMessages.ITEMS_NOT_FOUND())
     }
 
     const calculateAmount = this.calculatePurchaseAmount(itemsMap, items);

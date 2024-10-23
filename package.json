@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migrations": "sequelize-cli db:migrate",
     "seed:all": "sequelize-cli db:seed:all",
-    "migrate_and_run": "sequelize-cli db:migrate && nest start --watch"
+    "migrate_and_run": "sequelize-cli db:migrate && nest start --watch",
+    "migrate:seed:run": "sequelize-cli db:migrate && sequelize-cli db:seed:all && nest start"
   },
   "dependencies": {
     "@nestjs/cache-manager": "2.2.2",
