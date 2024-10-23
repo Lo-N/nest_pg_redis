@@ -1,4 +1,17 @@
-import { Column, Model, NotEmpty, Table, Unique, CreatedAt, UpdatedAt, DeletedAt, PrimaryKey, Default, DataType, HasMany } from 'sequelize-typescript';
+import {
+  Column,
+  Model,
+  NotEmpty,
+  Table,
+  Unique,
+  CreatedAt,
+  UpdatedAt,
+  DeletedAt,
+  PrimaryKey,
+  Default,
+  DataType,
+  HasMany,
+} from 'sequelize-typescript';
 import { UUID } from 'crypto';
 import { Purchase } from './purchase.model';
 

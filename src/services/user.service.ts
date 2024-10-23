@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { hash } from 'bcrypt';
 import { Transaction } from 'sequelize';
@@ -13,43 +17,51 @@ export class UserService {
 
   async getUserById(id: string): Promise<User> {
     try {
-      const user = await this.userRepository.findOne({ where: { id }});
+      const user = await this.userRepository.findOne({ where: { id } });
       if (!user) {
         throw new NotFoundException(UserErrorMessages.USER_NOT_FOUND_BY_ID(id));
       }
 
-      return user
+      return user;
     } catch (error) {
       console.warn(`An error occur at ${this.getUserById.name}`, error);
-      throw error
+      throw error;
     }
   }
 
   async getUserByLogin(login: string): Promise<User> {
     try {
-      const user = await this.userRepository.findOne({ where: { login }});
+      const user = await this.userRepository.findOne({ where: { login } });
       if (!user) {
-        throw new NotFoundException(UserErrorMessages.USER_NOT_FOUND_BY_LOGIN(login));
+        throw new NotFoundException(
+          UserErrorMessages.USER_NOT_FOUND_BY_LOGIN(login),
+        );
       }
-      
-      return user
+
+      return user;
     } catch (error) {
       console.warn(`An error occur at ${this.getUserByLogin.name}`, error);
-      throw error
+      throw error;
     }
   }
 
-  async getUserByLoginAndEmail(where: { login: string, email: string }): Promise<User> {
+  async getUserByLoginAndEmail(where: {
+    login: string;
+    email: string;
+  }): Promise<User> {
     try {
-      const user = await this.userRepository.findOne({ where })
+      const user = await this.userRepository.findOne({ where });
       if (!user) {
         throw new NotFoundException(UserErrorMessages.USER_NOT_FOUND());
       }
-      
-      return user
+
+      return user;
     } catch (error) {
-      console.warn(`An error occur at ${this.getUserByLoginAndEmail.name}`, error);
-      throw error
+      console.warn(
+        `An error occur at ${this.getUserByLoginAndEmail.name}`,
+        error,
+      );
+      throw error;
     }
   }
 
@@ -59,27 +71,37 @@ export class UserService {
         ...userData,
         password: await hash(userData.password, 10),
       });
-      
-      return user
+
+      return user;
     } catch (error) {
       console.warn(`An error occur at ${this.createUser.name}`, error);
       throw new BadRequestException(UserErrorMessages.USER_UNABLE_TO_CREATE());
     }
   }
 
-  async updateUser(user: User, data: UpdateUserDto, transaction?: Transaction): Promise<User> {
+  async updateUser(
+    user: User,
+    data: UpdateUserDto,
+    transaction?: Transaction,
+  ): Promise<User> {
     try {
-      Object.assign(user, data.password ? { ...data, password: await hash(data.password, 10) } : data);
+      Object.assign(
+        user,
+        data.password
+          ? { ...data, password: await hash(data.password, 10) }
+          : data,
+      );
 
       if (transaction) {
-        return user.save({transaction});
+        return user.save({ transaction });
       } else {
         return user.save();
       }
     } catch (error) {
       console.warn(`An error occur at ${this.updateUser.name}`, error);
-      throw new BadRequestException(UserErrorMessages.USER_UNABLE_TO_UPDATE(user.id));
+      throw new BadRequestException(
+        UserErrorMessages.USER_UNABLE_TO_UPDATE(user.id),
+      );
     }
   }
-
 }

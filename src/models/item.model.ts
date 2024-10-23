@@ -1,6 +1,16 @@
 import { v4 as uuidv4 } from 'uuid';
 import { UUID } from 'crypto';
-import { Column, CreatedAt, Default, DeletedAt, Model, NotEmpty, PrimaryKey, Table, UpdatedAt } from 'sequelize-typescript';
+import {
+  Column,
+  CreatedAt,
+  Default,
+  DeletedAt,
+  Model,
+  NotEmpty,
+  PrimaryKey,
+  Table,
+  UpdatedAt,
+} from 'sequelize-typescript';
 
 @Table
 export class Item extends Model {

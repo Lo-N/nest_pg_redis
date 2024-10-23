@@ -9,7 +9,10 @@ export class PurchaseController {
   constructor(private purchaseService: PurchaseService) {}
 
   @Post()
-  makePurchase(@UserInfo() userInfo: IAccessTokenData, @Body() requestBody: MakePurchaseDto) {
+  makePurchase(
+    @UserInfo() userInfo: IAccessTokenData,
+    @Body() requestBody: MakePurchaseDto,
+  ) {
     return this.purchaseService.makePurchase(userInfo, requestBody);
   }
 }

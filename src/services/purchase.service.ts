@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { MakePurchaseDto } from 'src/dto/makePurchase.dto';
 import { IAccessTokenData } from 'src/interfaces/accessTokenData.interface';
 import { Item } from 'src/models/item.model';
@@ -18,51 +22,67 @@ export class PurchaseService {
     private userService: UserService,
   ) {}
 
-  private calculatePurchaseAmount(itemsMap: Map<string, number>, items: Array<Item>): number {
+  private calculatePurchaseAmount(
+    itemsMap: Map<string, number>,
+    items: Array<Item>,
+  ): number {
     return items.reduce((amount: number, item: Item) => {
       const quantity = itemsMap.get(item.id)!;
-      return amount = (amount * 100 + item.price * 100 * quantity) / 100
-    }, 0)
+      return (amount = (amount * 100 + item.price * 100 * quantity) / 100);
+    }, 0);
   }
 
-  private calculateUserBalance(userBalance: number, purchaseAmount: number): number {
+  private calculateUserBalance(
+    userBalance: number,
+    purchaseAmount: number,
+  ): number {
     // 12.5 -> 1250; userBalance to cents
     // 9.21 -> 921; purchaseAmount to cents
     // 1250 - 921 = 329; result in cents
     // 329 -> 3.29; result
-    return (userBalance * 100 - purchaseAmount * 100) / 100
+    return (userBalance * 100 - purchaseAmount * 100) / 100;
   }
 
-  async makePurchase(userInfo: IAccessTokenData, requestBody: MakePurchaseDto): Promise<number> {
+  async makePurchase(
+    userInfo: IAccessTokenData,
+    requestBody: MakePurchaseDto,
+  ): Promise<number> {
     const user = await this.userService.getUserById(userInfo.id);
 
     if (user.balance === 0) {
-      throw new BadRequestException(UserErrorMessages.USER_NOT_ENOUGH_BALANCE());
+      throw new BadRequestException(
+        UserErrorMessages.USER_NOT_ENOUGH_BALANCE(),
+      );
     }
 
     const itemsMap = new Map<string, number>();
     requestBody.items.forEach((item) => {
-      itemsMap.set(item.itemId, item.quantity)
-    })
+      itemsMap.set(item.itemId, item.quantity);
+    });
 
-    const itemsIds = Array.from(itemsMap.keys())
+    const itemsIds = Array.from(itemsMap.keys());
 
     const items = await this.itemsService.getItemsByIds(itemsIds);
 
     if (items.length === 0) {
-      throw new NotFoundException(UserErrorMessages.ITEMS_NOT_FOUND())
+      throw new NotFoundException(UserErrorMessages.ITEMS_NOT_FOUND());
     }
 
     const calculateAmount = this.calculatePurchaseAmount(itemsMap, items);
 
     if (calculateAmount > user.balance) {
-      throw new BadRequestException(UserErrorMessages.USER_NOT_ENOUGH_BALANCE());
+      throw new BadRequestException(
+        UserErrorMessages.USER_NOT_ENOUGH_BALANCE(),
+      );
     }
 
-    const newUserBalance = this.calculateUserBalance(user.balance, calculateAmount);
+    const newUserBalance = this.calculateUserBalance(
+      user.balance,
+      calculateAmount,
+    );
 
     try {
-      await this.sequelize.transaction(async t => {
+      await this.sequelize.transaction(async (t) => {
         await this.purchaseRepository.create(
           {
             amount: calculateAmount,
@@ -72,15 +92,15 @@ export class PurchaseService {
           {
             transaction: t,
           },
-        )
+        );
 
-        await this.userService.updateUser(user, { balance: newUserBalance }, t)
-      })
+        await this.userService.updateUser(user, { balance: newUserBalance }, t);
+      });
 
-      return newUserBalance
+      return newUserBalance;
     } catch (error) {
       console.warn(`An error occur at ${this.makePurchase.name}`, error);
-      throw error
+      throw error;
     }
   }
 }

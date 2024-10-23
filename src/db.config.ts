@@ -1,7 +1,7 @@
-import { SequelizeModuleOptions } from "@nestjs/sequelize";
-import { Item } from "src/models/item.model";
-import { Purchase } from "src/models/purchase.model";
-import { User } from "src/models/user.model";
+import { SequelizeModuleOptions } from '@nestjs/sequelize';
+import { Item } from 'src/models/item.model';
+import { Purchase } from 'src/models/purchase.model';
+import { User } from 'src/models/user.model';
 
 export const DataBaseConfig: SequelizeModuleOptions = {
   dialect: 'postgres',
@@ -12,4 +12,4 @@ export const DataBaseConfig: SequelizeModuleOptions = {
   database: process.env.DB_DATABASE!,
   models: [User, Item, Purchase],
   autoLoadModels: true,
-}
+};

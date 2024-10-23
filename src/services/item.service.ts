@@ -12,31 +12,38 @@ import { UserErrorMessages } from 'src/utils/userErrorMessages.utils';
 export class ItemService {
   constructor(
     @InjectModel(Item) private itemRepository: typeof Item,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async getExternalItems(): Promise<IIncomingItem[]> {
     const cacheData = await this.cacheManager.get<IIncomingItem[]>('items');
     if (cacheData) {
-      console.log('Items were taken from the cache')
-      return cacheData
-    } 
+      console.log('Items were taken from the cache');
+      return cacheData;
+    }
 
     try {
-      const { data, status } = await axios.get<IIncomingItem[]>('https://api.skinport.com/v1/items');
+      const { data, status } = await axios.get<IIncomingItem[]>(
+        'https://api.skinport.com/v1/items',
+      );
 
       if (status !== HttpStatusCode.Ok) {
-        throw new BadGatewayException(UserErrorMessages.UPSTREAM_SERVER_ERROR())
+        throw new BadGatewayException(
+          UserErrorMessages.UPSTREAM_SERVER_ERROR(),
+        );
       }
-      
+
       // TODO: change incoming item fields
-      await this.cacheManager.set('items', data.map((item) => item));
+      await this.cacheManager.set(
+        'items',
+        data.map((item) => item),
+      );
       console.log('Items were saved to the cache');
-  
-      return data
+
+      return data;
     } catch (error) {
       console.warn(`An error occur at ${this.getExternalItems.name}`, error);
-      throw error
+      throw error;
     }
   }
 
@@ -47,6 +54,6 @@ export class ItemService {
           [Op.in]: ids,
         },
       },
-    })
+    });
   }
 }
